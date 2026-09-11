@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>Presenter Nova</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <div class="brand-group">
+        <button id="homeBtn" class="icon-btn" title="Start">⌂</button>
+        <div class="brand-mark">PN</div>
+        <div>
+          <div class="brand-title">Presenter Nova</div>
+          <div class="brand-subtitle">Interactive classroom canvas</div>
+        </div>
+      </div>
+
+      <div class="document-group">
+        <input id="documentTitle" class="document-title" value="Naamloze les" aria-label="Documentnaam" />
+        <span id="saveState" class="save-state">Opgeslagen</span>
+      </div>
+
+      <div class="top-actions">
+        <button id="undoBtn" class="icon-btn" title="Ongedaan maken (Ctrl+Z)">↶</button>
+        <button id="redoBtn" class="icon-btn" title="Opnieuw (Ctrl+Y)">↷</button>
+        <button id="shareBtn" class="soft-btn">Delen</button>
+        <button id="presentBtn" class="primary-btn">▶ Presenteren</button>
+        <button id="settingsBtn" class="icon-btn">⚙</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="left-rail" aria-label="Hoofdgereedschap">
+        <button class="rail-btn active" data-panel="pages" title="Pagina's"><span>▤</span><small>Pagina's</small></button>
+        <button class="rail-btn" data-panel="library" title="Mediabibliotheek"><span>◫</span><small>Media</small></button>
+        <button class="rail-btn" data-panel="tools" title="Tools"><span>⌘</span><small>Tools</small></button>
+        <button class="rail-btn" data-panel="widgets" title="Widgets"><span>◉</span><small>Widgets</small></button>
+        <button class="rail-btn" data-panel="connect" title="Klas verbinden"><span>⌁</span><small>Connect</small></button>
+        <div class="rail-spacer"></div>
+        <button class="rail-btn" data-panel="notes" title="Notities"><span>✎</span><small>Notities</small></button>
+      </aside>
+
+      <aside id="sidePanel" class="side-panel open">
+        <div class="panel-head">
+          <div>
+            <h2 id="panelTitle">Pagina's</h2>
+            <p id="panelSubtitle">Beheer je lespagina's</p>
+          </div>
+          <button id="closePanelBtn" class="icon-btn small">×</button>
+        </div>
+        <div id="panelContent" class="panel-content"></div>
+      </aside>
+
+      <main class="stage-area">
+        <div id="canvasToolbar" class="floating-toolbar">
+          <button class="tool-btn active" data-tool="select" title="Selecteren (V)">↖</button>
+          <button class="tool-btn" data-tool="pen" title="Pen (P)">✎</button>
+          <button class="tool-btn" data-tool="highlighter" title="Markeerstift (H)">▰</button>
+          <button class="tool-btn" data-tool="eraser" title="Gum (E)">⌫</button>
+          <span class="toolbar-divider"></span>
+          <button class="tool-btn" data-tool="line" title="Lijn (L)">╱</button>
+          <button class="tool-btn" data-tool="rectangle" title="Rechthoek (R)">▭</button>
+          <button class="tool-btn" data-tool="ellipse" title="Cirkel (O)">◯</button>
+          <button class="tool-btn" data-tool="text" title="Tekst (T)">T</button>
+          <span class="toolbar-divider"></span>
+          <button class="tool-btn" data-tool="laser" title="Laserpointer">•</button>
+          <button class="tool-btn" data-tool="pan" title="Verschuiven (Spatie)">✋</button>
+        </div>
+
+        <div id="propertiesBar" class="properties-bar">
+          <label class="property-item">Kleur <input id="strokeColor" type="color" value="#1d4ed8" /></label>
+          <label class="property-item">Dikte <input id="strokeWidth" type="range" min="1" max="32" value="4" /></label>
+          <span id="strokeWidthValue" class="property-value">4 px</span>
+          <button id="fillToggle" class="chip-btn">Vulling: uit</button>
+          <input id="fillColor" type="color" value="#bfdbfe" class="compact-color" />
+          <button id="deleteSelectionBtn" class="danger-chip">Verwijder selectie</button>
+        </div>
+
+        <div id="stageViewport" class="stage-viewport">
+          <div id="stageScaler" class="stage-scaler">
+            <div id="board" class="board background-blank" tabindex="0" aria-label="Presentatiebord">
+              <svg id="svgCanvas" class="svg-canvas" viewBox="0 0 1600 900" preserveAspectRatio="none">
+                <g id="contentLayer"></g>
+                <g id="interactionLayer"></g>
+              </svg>
+              <div id="domLayer" class="dom-layer"></div>
+              <div id="laserDot" class="laser-dot hidden"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-dock">
+          <button id="prevPageBtn" class="dock-btn">‹</button>
+          <button id="pageCounterBtn" class="page-counter">1 / 1</button>
+          <button id="nextPageBtn" class="dock-btn">›</button>
+          <span class="dock-divider"></span>
+          <button id="fitBtn" class="dock-btn" title="Passend">⊙</button>
+          <button id="zoomOutBtn" class="dock-btn">−</button>
+          <span id="zoomLabel" class="zoom-label">100%</span>
+          <button id="zoomInBtn" class="dock-btn">+</button>
+          <span class="dock-divider"></span>
+          <button id="backgroundBtn" class="dock-btn wide">Achtergrond</button>
+          <button id="fullscreenBtn" class="dock-btn wide">Volledig scherm</button>
+        </div>
+      </main>
+
+      <aside id="inspector" class="inspector">
+        <div class="inspector-title">Eigenschappen</div>
+        <div id="inspectorContent" class="inspector-content">
+          <p class="muted">Selecteer een object om eigenschappen te bewerken.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <input id="imageInput" type="file" accept="image/*" hidden />
+  <input id="importInput" type="file" accept="application/json,.json" hidden />
+
+  <div id="toastHost" class="toast-host"></div>
+
+  <dialog id="modal" class="modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="modalTitle">Venster</h3>
+        <button id="modalClose" class="icon-btn small">×</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
